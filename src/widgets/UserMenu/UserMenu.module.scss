@@ -1,0 +1,58 @@
+@use '../../shared/ui/styles/mixins.scss' as mixins;
+@use '../../shared/ui/styles/variables.scss' as vars;
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:27px;
+
+  .userInfo {
+    display: inherit;
+    align-items: inherit;
+    cursor: pointer;
+    &:hover .avatar  {
+      scale: 1.2;
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+  }
+
+  .avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+  }
+
+  .userName {
+    margin-right: 13px;
+    font-weight: bold;
+  }
+
+  .button {
+    @include mixins.font('header_button');
+    align-content: center;
+    width: 109px;
+    height: 51px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &--signIn {
+      &:hover {
+        border: 1px solid gray;
+      }
+    }
+  
+    &--signUp {
+      color:#52C41A;
+      border:1px solid #52C41A;
+    }
+  
+    &--signOut {
+      color: #f5222d;
+    }
+  }
+
+}
