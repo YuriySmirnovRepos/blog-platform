@@ -1,5 +1,5 @@
-@use '../../shared/ui/styles/mixins.scss' as mixins;
-@use '../../shared/ui/styles/variables.scss' as vars;
+@use '@shared/ui/styles/mixins.scss' as mixins;
+@use '@shared/ui/styles/variables.scss' as vars;
 
 .userMenu {
   display: flex;

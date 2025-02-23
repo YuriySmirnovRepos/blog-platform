@@ -1,4 +1,4 @@
-import Article from "@entities/Article/ui/Article";
+import ArticleCard from "@widgets/ArticleCard/ArticleCard";
 import { ArticlesListProps } from "../model/types";
 import styles from "./ArticlesList.module.scss";
 import { v4 as randomUUID } from "uuid";
@@ -8,7 +8,7 @@ export default function ArticlesList({
 }: ArticlesListProps): JSX.Element {
   const articlesElements = articles.map((article) => (
     <li key={randomUUID()}>
-      <Article isDetailed={false} articleData={article} />
+      <ArticleCard isDetailed={false} articleData={article} />
     </li>
   ));
   return <ul className={styles.articlesList}>{articlesElements}</ul>;

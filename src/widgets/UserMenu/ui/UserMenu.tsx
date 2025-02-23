@@ -1,44 +1,44 @@
 import React from "react";
-import UserAvatar from "@assets/userAvatar.svg";
 import styles from "./UserMenu.module.scss";
+import User from "@entities/User";
+import useAuth from "@shared/hooks/useAuth";
+import { useGetMeQuery } from "@entities/User/api/userApi";
+import Message from "@shared/ui/Message/Message";
 
-interface UserMenuProps {
-  isLoggedIn: boolean;
-  userName?: string;
-  userAvatar?: string;
-  onSignIn: () => void;
-  onSignOut: () => void;
-}
+const onCreateArticle = () => {};
+const onSignUp = () => {};
 
-const UserMenu: React.FC<UserMenuProps> = ({
-  isLoggedIn,
-  userName,
-  userAvatar,
-  onSignIn,
-  onSignOut,
-}) => {
+const UserMenu: React.FC = () => {
+  const { isLoggedIn, token, error: authError, login, logout } = useAuth();
+  const {
+    data,
+    isLoading,
+    error: getMeError,
+  } = useGetMeQuery(token, {
+    skip: !token,
+  });
+
+  if (authError || getMeError) {
+    return <Message text={"Something went wrong. Auth error"} type="error" />;
+  }
+
   return (
     <div className={styles.userMenu}>
       {isLoggedIn ? (
         <>
           <button
             type="button"
-            onClick={onSignOut}
+            onClick={onCreateArticle}
             className={`${styles.button} ${styles["button--signIn"]}`}
           >
             Create article
           </button>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>{userName}</span>
-            <img
-              src={userAvatar ?? UserAvatar}
-              alt={`${userName}'s avatar`}
-              className={styles.avatar}
-            />
-          </div>
+
+          <User variant="current" user={data} />
+
           <button
             type="button"
-            onClick={onSignOut}
+            onClick={logout}
             className={`${styles.button} ${styles["button--signOut"]}`}
           >
             Sign out
@@ -48,14 +48,14 @@ const UserMenu: React.FC<UserMenuProps> = ({
         <>
           <button
             type="button"
-            onClick={onSignIn}
+            onClick={() => login({ email: "test@test.com", password: "123" })}
             className={`${styles.button} ${styles["button--signIn"]}`}
           >
             Sign in
           </button>
           <button
             type="button"
-            onClick={onSignIn}
+            onClick={onSignUp}
             className={`${styles.button} ${styles["button--signUp"]}`}
           >
             Sign up

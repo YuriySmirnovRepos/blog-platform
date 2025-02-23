@@ -1,11 +1,11 @@
-import styles from "../ui/Article.module.scss";
-import { ArticleProps } from "../model/types";
+import styles from "./ArticleCard.module.scss";
+import { ArticleProps } from "@entities/Article/model/types";
 import { v4 as uuidv4 } from "uuid";
-import User from "../../User/ui/User";
+import User from "@entities/User/ui/User";
 import { Link } from "react-router-dom";
 import MarkdownParser from "@shared/components/MarkdownParser";
 
-const Article: React.FC<ArticleProps> = ({ isDetailed, articleData }) => {
+const ArticleCard: React.FC<ArticleProps> = ({ isDetailed, articleData }) => {
   const {
     title,
     body,
@@ -55,4 +55,4 @@ const Article: React.FC<ArticleProps> = ({ isDetailed, articleData }) => {
   );
 };
 
-export default Article;
+export default ArticleCard;

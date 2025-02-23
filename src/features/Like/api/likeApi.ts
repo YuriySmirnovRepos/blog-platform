@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { BASE_URL } from "@shared/config";
 
-export const api = createApi({
-  reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
+export const likeApi = createApi({
+  reducerPath: "likeApi",
+  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     favoriteArticle: builder.mutation({
       query: (slug: string) => ({
@@ -14,4 +15,4 @@ export const api = createApi({
   }),
 });
 
-export const { useFavoriteArticleMutation } = api;
+export const { useFavoriteArticleMutation } = likeApi;

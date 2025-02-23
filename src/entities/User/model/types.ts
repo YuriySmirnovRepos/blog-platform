@@ -11,15 +11,13 @@ export interface CurrentUser extends User {
 
 export interface Author extends User {
   following: boolean;
-  avatarUrl?: string;
-  name?: string;
 }
 
 type UserVariant = "current" | "author";
 
 export interface UserProps {
-  user: User | Author;
   variant: UserVariant;
+  user?: CurrentUser | Author;
   createdAt?: string;
   style?: React.CSSProperties;
 }

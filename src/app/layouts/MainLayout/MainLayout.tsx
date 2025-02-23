@@ -1,7 +1,6 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import styles from "./MainLayout.module.scss";
-import UserMenu from "@widgets/UserMenu/UserMenu";
-import { Link } from "react-router-dom";
+import UserMenu from "@widgets/UserMenu/ui/UserMenu";
 
 export default function MainLayout() {
   return (
@@ -10,12 +9,7 @@ export default function MainLayout() {
         <Link to="/" className={styles.title}>
           Realworld Blog
         </Link>
-        <UserMenu
-          isLoggedIn={false}
-          onSignIn={() => {}}
-          onSignOut={() => {}}
-          userName="George"
-        />
+        <UserMenu />
       </header>
       <main className={styles.mainLayout}>
         <Outlet />

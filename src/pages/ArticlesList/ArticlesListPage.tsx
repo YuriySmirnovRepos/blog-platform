@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import ErrorBoundary from "@shared/components/ErrorBoundary";
 import ArticlesList from "@features/ArticlesList/ui/ArticlesList";
-import Pagination from "@pages/ArticlesList/components/Pagination/Pagination";
+import Pagination from "./components/Pagination/Pagination";
 import styles from "./ArticlesListPage.module.scss";
 import { useGetArticlesQuery } from "@features/ArticlesList/api/articlesListAPI";
 import Loader from "@shared/ui/Loader/Loader";
@@ -32,12 +32,16 @@ export default function ArticlesListPage() {
   return (
     <div className={styles.articlesListPage}>
       <ErrorBoundary>
-        {isLoading || isFetching ? (
+        {isLoading ? (
           <Loader />
         ) : (
-          <ArticlesList articles={data.articles} />
+          <>
+            {(isFetching && <Loader />) || (
+              <ArticlesList articles={data.articles} />
+            )}
+            <Pagination totalPages={pagesCount} />
+          </>
         )}
-        <Pagination totalPages={pagesCount} />
       </ErrorBoundary>
     </div>
   );
