@@ -1,11 +1,10 @@
-// import styles from "./SignInPage.module.css";
-import SignInForm from "@features/Auth/ui/SignInForm";
+import { SignInForm } from "@features/Auth/ui/SignInForm/SignInForm";
 
 export const SignInPage = () => {
   return (
-    <>
-      <SignInForm />
-    </>
+    <div style={{ paddingTop: 59 }}>
+      <SignInForm title="Sign In" />
+    </div>
   );
 };
 

@@ -12,31 +12,20 @@ const userSliceAPI = blogApi.injectEndpoints({
         },
       }),
     }),
-    login: builder.mutation({
-      query: (user: { email: string; password: string }) => ({
-        url: "/users/login",
-        method: "POST",
-        body: user,
-      }),
-    }),
-    logout: builder.mutation({
-      query: () => ({
-        url: "/users/logout",
-        method: "POST",
-      }),
-    }),
-    register: builder.mutation({
-      query: (user: { email: string; password: string; username: string }) => ({
-        url: "/users",
-        method: "POST",
-        body: user,
-      }),
-    }),
+    // login: builder.mutation({
+    //   query: (user: { email: string; password: string }) => ({
+    //     url: "/users/login",
+    //     method: "POST",
+    //     body: user,
+    //   }),
+    // }),
+    // register: builder.mutation({
+    //   query: (user: { email: string; password: string; username: string }) => ({
+    //     url: "/users",
+    //     method: "POST",
+    //     body: user,
+    //   }),
+    // }),
   }),
 });
-export const {
-  useGetMeQuery,
-  useLoginMutation,
-  useLogoutMutation,
-  useRegisterMutation,
-} = userSliceAPI;
+export const { useGetMeQuery } = userSliceAPI;

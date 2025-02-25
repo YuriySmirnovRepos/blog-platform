@@ -4,13 +4,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import MainLayout from "../layouts/MainLayout/MainLayout";
-import NotFoundPage from "../../pages/NotFound/NotFoundPage";
-import ArticlesListPage from "../../pages/ArticlesList/ArticlesListPage";
-import ArticlePage from "../../pages/Article/ArticlePage";
-import SignInPage from "../../pages/SignIn/SignInPage";
-import SignUpPage from "../../pages/SignUp/SignUpPage";
-import ProfilePage from "../../pages/Profile/ProfilePage";
+import MainLayout from "@app/layouts/MainLayout/MainLayout";
+import NotFoundPage from "@pages/NotFound/NotFoundPage";
+import ArticlesListPage from "@pages/ArticlesList/ArticlesListPage";
+import ArticlePage from "@pages/Article/ArticlePage";
+import SignInPage from "@pages/SignIn/SignInPage";
+import SignUpPage from "@pages/SignUp/SignUpPage";
+import ProfilePage from "@pages/Profile/ProfilePage";
+import CreateArticlePage from "@pages/CreateArticle/CreateArticlePage";
 
 const RouterProvider = () => {
   return (
@@ -24,6 +25,7 @@ const RouterProvider = () => {
           <Route path="sign-in" element={<SignInPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="new-article" element={<CreateArticlePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

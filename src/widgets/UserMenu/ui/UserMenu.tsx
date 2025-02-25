@@ -2,39 +2,33 @@ import React from "react";
 import styles from "./UserMenu.module.scss";
 import User from "@entities/User";
 import useAuth from "@shared/hooks/useAuth";
-import { useGetMeQuery } from "@entities/User/api/userApi";
-import Message from "@shared/ui/Message/Message";
-
-const onCreateArticle = () => {};
-const onSignUp = () => {};
+import UserAvatar from "@assets/userAvatar.svg";
+import { NavLink } from "react-router-dom";
+import { CurrentUser } from "@entities/User/model/types";
 
 const UserMenu: React.FC = () => {
-  const { isLoggedIn, token, error: authError, login, logout } = useAuth();
-  const {
-    data,
-    isLoading,
-    error: getMeError,
-  } = useGetMeQuery(token, {
-    skip: !token,
-  });
+  const { isLoggedIn, logout } = useAuth();
 
-  if (authError || getMeError) {
-    return <Message text={"Something went wrong. Auth error"} type="error" />;
-  }
+  //TODO: replace with actual user data
+  const userPropsMockData: CurrentUser = {
+    username: "John Doe",
+    image: UserAvatar,
+    email: "john@example.com",
+    token: "123456",
+  };
 
   return (
     <div className={styles.userMenu}>
       {isLoggedIn ? (
         <>
-          <button
-            type="button"
-            onClick={onCreateArticle}
+          <NavLink
+            to={"/create-article"}
             className={`${styles.button} ${styles["button--signIn"]}`}
           >
             Create article
-          </button>
+          </NavLink>
 
-          <User variant="current" user={data} />
+          <User user={userPropsMockData} variant="current" />
 
           <button
             type="button"
@@ -45,21 +39,20 @@ const UserMenu: React.FC = () => {
           </button>
         </>
       ) : (
+        //not logged in
         <>
-          <button
-            type="button"
-            onClick={() => login({ email: "test@test.com", password: "123" })}
+          <NavLink
             className={`${styles.button} ${styles["button--signIn"]}`}
+            to="/sign-in"
           >
             Sign in
-          </button>
-          <button
-            type="button"
-            onClick={onSignUp}
+          </NavLink>
+          <NavLink
             className={`${styles.button} ${styles["button--signUp"]}`}
+            to="/sign-up"
           >
             Sign up
-          </button>
+          </NavLink>
         </>
       )}
     </div>

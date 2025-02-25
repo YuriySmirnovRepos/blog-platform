@@ -38,10 +38,12 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
+    text-align: center;
 
     &--signIn {
       &:hover {
-        border: 1px solid gray;
+        outline: 1px solid gray;
       }
     }
   
