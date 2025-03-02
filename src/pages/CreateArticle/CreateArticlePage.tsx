@@ -1,4 +1,3 @@
-// import { CreateArticleForm } from "@features/CreateArticle";
 import EditableArticleCard from "@widgets/ArticleCard/components/EditableArticleCard/EditableArticleCard";
 
 const CreateArticlePage = () => {

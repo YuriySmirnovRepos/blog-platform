@@ -1,4 +1,4 @@
-import styles from "./ArticleForm.module.css";
+import styles from "./ArticleForm.module.scss";
 import { ArticleData } from "@entities/Article/model/types";
 import { useState } from "react";
 
@@ -9,11 +9,7 @@ interface ArticleFormProps {
 }
 
 // Компонент формы для редактирования статьи
-const ArticleForm: React.FC<ArticleFormProps> = ({
-  initialData,
-  onSubmit,
-  onCancel,
-}) => {
+const ArticleForm: React.FC<ArticleFormProps> = ({ initialData, onSubmit }) => {
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     description: initialData?.description || "",
@@ -26,6 +22,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    console.log(e.target.name, e.target.value);
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -64,11 +61,13 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 
   return (
     <form className={styles.articleForm} onSubmit={handleSubmit}>
-      <h2>Редактирование статьи</h2>
+      <h2>Create new article</h2>
 
       <div className={styles.formGroup}>
-        <label>Заголовок</label>
+        <label>Title</label>
         <input
+          title="Заголовок статьи"
+          placeholder="Title"
           type="text"
           name="title"
           value={formData.title}
@@ -78,8 +77,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       </div>
 
       <div className={styles.formGroup}>
-        <label>Описание</label>
+        <label>Short description</label>
         <input
+          title="Краткое описание статьи"
+          placeholder="Short description"
           type="text"
           name="description"
           value={formData.description}
@@ -89,8 +90,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       </div>
 
       <div className={styles.formGroup}>
-        <label>Содержание</label>
+        <label>Text</label>
         <textarea
+          title="Текст статьи"
+          placeholder="Text"
           name="body"
           value={formData.body}
           onChange={handleChange}
@@ -100,49 +103,47 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       </div>
 
       <div className={styles.formGroup}>
-        <label>Теги</label>
+        <label>Tags</label>
         <div className={styles.tagsList}>
           {formData.tagList.map((tag) => (
             <div key={tag} className={styles.tagItem}>
-              {tag}
+              <input
+                type="text"
+                name="tag"
+                value={tag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="Tag"
+              />
               <button
                 type="button"
-                className={styles.deleteButton}
+                className={styles.deleteTagButton}
                 onClick={() => handleDeleteTag(tag)}
               >
-                Удалить
+                Delete
               </button>
             </div>
           ))}
         </div>
-        <div className={styles.tagsInputGroup}>
+        <div className={styles.tagItem}>
           <input
+            type="text"
+            name="tag"
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
-            placeholder="Добавить тег"
+            placeholder="Tag"
           />
           <button
             type="button"
             className={styles.addTagButton}
             onClick={handleAddTag}
           >
-            Добавить тег
+            Add tag
           </button>
         </div>
       </div>
-
-      <div className={styles.formActions}>
-        <button type="submit" className={styles.saveButton}>
-          Сохранить
-        </button>
-        <button
-          type="button"
-          className={styles.cancelButton}
-          onClick={onCancel}
-        >
-          Отменить
-        </button>
-      </div>
+      <button type="submit" className={styles.sendButton}>
+        Send
+      </button>
     </form>
   );
 };

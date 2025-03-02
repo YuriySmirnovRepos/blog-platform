@@ -1,4 +1,4 @@
-.create-article-form {
+.articleForm {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -6,8 +6,7 @@
     background: #FFFFFF;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 800px;
+    width: 75vw;
     margin: 0 auto;
 
     h2 {
@@ -19,7 +18,7 @@
         margin-bottom: 8px;
     }
 
-    .form-group {
+    .formGroup {
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -51,74 +50,62 @@
             resize: vertical;
         }
 
-        .error-message {
+        .errorMessage {
             color: #F44336;
             font-size: 12px;
             margin-top: 4px;
         }
-    }
 
-    .tags-container {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-
-        .tags-input-group {
+        .tagsList {
             display: flex;
-            gap: 8px;
-            align-items: flex-start;
-
-            input {
-                flex: 1;
-            }
-        }
-
-        .tags-list {
-            display: flex;
+            flex-direction: column;
             flex-wrap: wrap;
             gap: 8px;
-
-            .tag-item {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 6px 12px;
-                background: #F5F5F5;
-                border-radius: 4px;
-                font-size: 14px;
-
-                .delete-button {
-                    background: none;
-                    border: none;
-                    color: #F44336;
-                    cursor: pointer;
-                    padding: 0;
-                    font-size: 14px;
-
-                    &:hover {
-                        color: #D32F2F;
-                    }
-                }
-            }
         }
 
-        .add-tag-button {
-            background: none;
-            border: 1px solid #2196F3;
-            color: #2196F3;
-            padding: 8px 16px;
+        .tagItem {
+            display: flex;
+            align-items: center;
+            gap: 17px;
             border-radius: 4px;
-            cursor: pointer;
             font-size: 14px;
-            transition: all 0.2s;
+            height: 40px;
 
-            &:hover {
-                background: #E3F2FD;
+            input {
+                width:30%;
+            }
+
+            .deleteTagButton {
+                width: 120px;
+                height: 40px;
+                background: none;
+                border: 1px solid #F44336;
+                border-radius: 3px;
+                color: #F44336;
+                cursor: pointer;
+                padding: 8px 36px;
+                font-size: 16px;
+    
+                &:hover {
+                    color: #D32F2F;
+                }
+            }
+            .addTagButton {
+                width: 120px;
+                height: 40px;
+                background: none;
+                border: 1px solid #2196F3;
+                color: #2196F3;
+                padding: 8px 16px;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 16px;
             }
         }
     }
 
-    .send-button {
+
+    .sendButton {
         background: #2196F3;
         color: white;
         border: none;
