@@ -1,27 +1,82 @@
-import React from "react";
+import React, { useImperativeHandle } from "react";
 import {
   withForm,
   BaseFormData,
 } from "@shared/components/HOC/withForm/withForm";
+import { useUpdateUserMutation } from "../../api/authSliceApi";
+import { useAuth } from "@features/Auth/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileFormData extends BaseFormData {
   username: string;
   email: string;
   password?: string;
-  avatarUrl: string;
+  avatarUrl?: string;
+  image?: string;
 }
 
-const ProfileEditFormContent: React.FC<{ form: any }> = ({ form }) => {
-  const {
-    register,
-    formState: { errors },
-  } = form;
+const ProfileEditFormContent = React.forwardRef<
+  { onFormSubmit: (data: ProfileFormData) => Promise<void> },
+  { form: any }
+>(({ form: { register, formState, setError } }, ref) => {
+  const [updateUserMutationTrigger, { isLoading }] = useUpdateUserMutation();
+  const { currentUser, updateUser, logout } = useAuth();
+  const { errors } = formState;
+  const navigate = useNavigate();
+
+  useImperativeHandle(ref, () => ({
+    onFormSubmit: async (data: ProfileFormData) => {
+      try {
+        // Создаем базовый объект user без password
+        const userUpdate: Record<
+          string,
+          string | number | boolean | undefined
+        > = {
+          username: data.username,
+          email: data.email,
+          image: data.avatarUrl,
+        };
+
+        // Условно добавляем password только если оно существует и не пустое
+        if (data.password && data.password.trim() !== "") {
+          userUpdate.password = data.password;
+        }
+
+        const response = await updateUserMutationTrigger({
+          user: userUpdate,
+        }).unwrap();
+
+        if (data.password) {
+          logout();
+          navigate("/sign-in");
+        } else {
+          updateUser(response.user);
+        }
+      } catch (err) {
+        if (err.data?.errors) {
+          Object.keys(err.data.errors).forEach((key) => {
+            setError(key as keyof ProfileFormData, {
+              type: "server",
+              message: err.data.errors[key],
+            });
+          });
+        } else {
+          setError("root", {
+            type: "server",
+            message: err.data.message,
+          });
+        }
+      }
+    },
+  }));
 
   return (
-    <>
+    <fieldset disabled={isLoading}>
       <div className="form-group">
         <label>Username</label>
         <input
+          defaultValue={currentUser?.username}
+          autoComplete="username"
           placeholder="Username"
           {...register("username", {
             required: "Username is required",
@@ -39,8 +94,10 @@ const ProfileEditFormContent: React.FC<{ form: any }> = ({ form }) => {
       <div className="form-group">
         <label>Email address</label>
         <input
+          defaultValue={currentUser?.email}
           placeholder="Email address"
           type="email"
+          autoComplete="email"
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -59,6 +116,7 @@ const ProfileEditFormContent: React.FC<{ form: any }> = ({ form }) => {
         <input
           placeholder="New password"
           type="password"
+          autoComplete="new-password"
           {...register("password", {
             minLength: {
               value: 6,
@@ -74,7 +132,9 @@ const ProfileEditFormContent: React.FC<{ form: any }> = ({ form }) => {
       <div className="form-group">
         <label>Avatar image (url)</label>
         <input
+          defaultValue={currentUser?.image}
           placeholder="Avatar image"
+          autoComplete="url"
           {...register("avatarUrl", {
             pattern: {
               value:
@@ -91,10 +151,10 @@ const ProfileEditFormContent: React.FC<{ form: any }> = ({ form }) => {
       <button type="submit" className="form-button">
         Save
       </button>
-    </>
+    </fieldset>
   );
-};
+});
 
-export const ProfileEditForm = withForm<ProfileFormData>(
-  ProfileEditFormContent,
-);
+ProfileEditFormContent.displayName = "ProfileEditFormContent";
+
+export const ProfileEditForm = withForm(ProfileEditFormContent);

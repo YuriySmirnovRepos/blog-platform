@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useImperativeHandle } from "react";
 import { Link } from "react-router-dom";
 import { UseFormReturn } from "react-hook-form";
 import {
   withForm,
   BaseFormData,
 } from "@shared/components/HOC/withForm/withForm";
-import { useRegisterMutation } from "@features/Auth/api/authSliceApi";
+import { useRegisterMutation } from "../../api/authSliceApi";
 
 interface SignUpFormData extends BaseFormData {
   username: string;
@@ -20,55 +20,54 @@ interface SignUpFormProps {
   title: string;
 }
 
-const SignUpFormContent: React.FC<SignUpFormProps> = ({ form }) => {
+const SignUpFormContent = React.forwardRef<
+  { onFormSubmit: (data: SignUpFormData) => Promise<void> },
+  SignUpFormProps
+>(({ form }, ref) => {
   const [registerMutationTrigger, { isLoading }] = useRegisterMutation();
   const {
     register,
     formState: { errors },
     setError,
-    handleSubmit,
   } = form;
 
-  const handleButtonClick = (e: React.MouseEvent) => {
-    const onSubmit = (data: SignUpFormData) => {
-      registerMutationTrigger({
-        user: {
-          email: data.email,
-          password: data.password,
-          username: data.username,
-        },
-      })
-        .unwrap()
-        .then(() => {
-          console.log("success");
-        })
-        .catch((err: any) => {
-          if (err.data?.errors) {
-            Object.keys(err.data.errors).forEach((key) => {
-              setError(key as keyof SignUpFormData, {
-                type: "server",
-                message: err.data.errors[key],
-              });
-            });
-          } else {
-            setError("root", {
+  useImperativeHandle(ref, () => ({
+    onFormSubmit: async (data: SignUpFormData) => {
+      try {
+        const response = await registerMutationTrigger({
+          user: {
+            username: data.username,
+            email: data.email,
+            password: data.password,
+          },
+        }).unwrap();
+        localStorage.setItem("token", response.user.token);
+        window.location.href = "/";
+        console.log(`success. token: ${response.user.token}`);
+      } catch (err) {
+        // console.error(err);
+        if (err.data?.errors) {
+          Object.keys(err.data.errors).forEach((key) => {
+            setError(key as keyof SignUpFormData, {
               type: "server",
-              message: err.data.message,
+              message: err.data.errors[key],
             });
-          }
-        });
-    };
-
-    e.preventDefault();
-    handleSubmit(onSubmit)();
-  };
+          });
+        } else {
+          setError("root", {
+            type: "server",
+            message: err.data.message,
+          });
+        }
+      }
+    },
+  }));
 
   return (
-    <>
+    <fieldset disabled={isLoading}>
       <div className="form-group">
         <label>Username</label>
         <input
-          disabled={isLoading}
           placeholder="Username"
           autoComplete="username"
           {...register("username", {
@@ -87,7 +86,6 @@ const SignUpFormContent: React.FC<SignUpFormProps> = ({ form }) => {
       <div className="form-group">
         <label>Email address</label>
         <input
-          disabled={isLoading}
           placeholder="Email address"
           type="email"
           autoComplete="email"
@@ -107,7 +105,6 @@ const SignUpFormContent: React.FC<SignUpFormProps> = ({ form }) => {
       <div className="form-group">
         <label>Password</label>
         <input
-          disabled={isLoading}
           placeholder="Password"
           type="password"
           autoComplete="new-password"
@@ -127,7 +124,6 @@ const SignUpFormContent: React.FC<SignUpFormProps> = ({ form }) => {
       <div className="form-group">
         <label>Repeat Password</label>
         <input
-          disabled={isLoading}
           placeholder="Repeat Password"
           type="password"
           autoComplete="new-password"
@@ -143,34 +139,37 @@ const SignUpFormContent: React.FC<SignUpFormProps> = ({ form }) => {
       </div>
 
       <div className="form-group checkbox-group">
-        <input
-          disabled={isLoading}
-          type="checkbox"
-          {...register("agreeToTerms", {
-            required: "You must agree to the terms",
-          })}
-        />
-        <label>I agree to the processing of my personal information</label>
+        <div className="input-container">
+          <input
+            id="agreeToTerms"
+            placeholder="I agree to the processing of my personal information"
+            title="You must agree to the terms"
+            type="checkbox"
+            {...register("agreeToTerms", {
+              required: "You must agree to the terms",
+            })}
+          />
+          <label htmlFor="agreeToTerms">
+            I agree to the processing of my personal information
+          </label>
+        </div>
         {errors.agreeToTerms && (
           <span className="error-message">{errors.agreeToTerms.message}</span>
         )}
       </div>
 
-      <button
-        disabled={isLoading}
-        type="submit"
-        className="form-button"
-        onClick={handleButtonClick}
-      >
+      <button type="submit" className="form-button">
         Create
       </button>
 
       <p className="form-link">
         Already have an account? <Link to="/sign-in">Sign In</Link>
       </p>
-    </>
+    </fieldset>
   );
-};
+});
+
+SignUpFormContent.displayName = "SignUpFormContent";
 
 export const SignUpForm = withForm<SignUpFormProps & { title: string }>(
   SignUpFormContent,

@@ -1,9 +1,10 @@
-import { CreateArticleForm } from "@features/CreateArticle";
+// import { CreateArticleForm } from "@features/CreateArticle";
+import EditableArticleCard from "@widgets/ArticleCard/components/EditableArticleCard/EditableArticleCard";
 
 const CreateArticlePage = () => {
   return (
     <div style={{ paddingTop: 24 }}>
-      <CreateArticleForm title="Create new article" />
+      <EditableArticleCard title="Create new article" isNewArticle />
     </div>
   );
 };

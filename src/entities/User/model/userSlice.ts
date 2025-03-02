@@ -1,18 +1,30 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CurrentUser } from "@entities/User/model/types";
 
-const initialState: CurrentUser | undefined = undefined;
+interface UserState {
+  currentUser: CurrentUser | null;
+  isAuth: boolean;
+}
+
+const initialState: UserState = {
+  currentUser: null,
+  isAuth: false,
+};
 
 export const userSlice = createSlice({
-  name: "currentUser",
+  name: "user",
   initialState,
   reducers: {
     setCurrentUser: (state, action: PayloadAction<CurrentUser>) => {
-      if (state) {
-        Object.assign(state, action.payload);
-      }
+      state.currentUser = action.payload;
+      state.isAuth = true;
+    },
+    logoutUser: (state) => {
+      state.currentUser = null;
+      state.isAuth = false;
     },
   },
 });
-export const { setCurrentUser } = userSlice.actions;
+
+export const { setCurrentUser, logoutUser } = userSlice.actions;
 export default userSlice.reducer;

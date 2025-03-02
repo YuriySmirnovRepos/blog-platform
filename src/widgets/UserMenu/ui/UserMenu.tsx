@@ -1,55 +1,70 @@
 import React from "react";
 import styles from "./UserMenu.module.scss";
 import User from "@entities/User";
-import useAuth from "@shared/hooks/useAuth";
-import UserAvatar from "@assets/userAvatar.svg";
-import { NavLink } from "react-router-dom";
-import { CurrentUser } from "@entities/User/model/types";
+import { useAuth } from "@features/Auth/hooks/useAuth";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const UserMenu: React.FC = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isAuth, currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
-  //TODO: replace with actual user data
-  const userPropsMockData: CurrentUser = {
-    username: "John Doe",
-    image: UserAvatar,
-    email: "john@example.com",
-    token: "123456",
+  const handleLogout = () => {
+    logout();
+    // Перенаправляем на домашнюю страницу
+    navigate("/");
   };
 
   return (
     <div className={styles.userMenu}>
-      {isLoggedIn ? (
+      {isAuth ? (
         <>
           <NavLink
-            to={"/create-article"}
-            className={`${styles.button} ${styles["button--signIn"]}`}
+            style={({ isActive }) => ({
+              outline: isActive ? "1px solid #52C41A" : "",
+            })}
+            to={"/new-article"}
+            className={`${styles.button} ${styles["button--create"]}`}
           >
             Create article
           </NavLink>
 
-          <User user={userPropsMockData} variant="current" />
+          <Link to={"/profile"}>
+            <User
+              user={currentUser}
+              variant="current"
+              style={{
+                cursor: "pointer",
+                gridTemplateAreas: '"username avatar"',
+                alignItems: "center",
+              }}
+            />
+          </Link>
 
           <button
             type="button"
-            onClick={logout}
+            onClick={handleLogout}
             className={`${styles.button} ${styles["button--signOut"]}`}
           >
-            Sign out
+            Log out
           </button>
         </>
       ) : (
-        //not logged in
         <>
           <NavLink
+            style={({ isActive }) => ({
+              outline: isActive ? "1px solid rgb(0, 0, 0, .7)" : "",
+            })}
+            to={"/sign-in"}
             className={`${styles.button} ${styles["button--signIn"]}`}
-            to="/sign-in"
           >
             Sign in
           </NavLink>
           <NavLink
+            to={"/sign-up"}
+            style={({ isActive }) => ({
+              outline: isActive ? "1px solid #52C41A" : "",
+            })}
             className={`${styles.button} ${styles["button--signUp"]}`}
-            to="/sign-up"
           >
             Sign up
           </NavLink>

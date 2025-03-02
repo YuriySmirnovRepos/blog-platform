@@ -17,7 +17,7 @@ type UserVariant = "current" | "author";
 
 export interface UserProps {
   variant: UserVariant;
-  user?: CurrentUser | Author;
+  user?: CurrentUser | Author | null;
   createdAt?: string;
   style?: React.CSSProperties;
 }

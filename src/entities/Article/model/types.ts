@@ -12,8 +12,3 @@ export interface ArticleData {
   favoritesCount: number;
   author: Author;
 }
-
-export interface ArticleProps {
-  isDetailed: boolean;
-  articleData: ArticleData;
-}

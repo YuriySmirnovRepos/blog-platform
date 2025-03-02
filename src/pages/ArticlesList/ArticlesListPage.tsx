@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 
 export default function ArticlesListPage() {
   const { page } = useParams();
-  const currentPage = Number(page ?? 1);
+  const currentPage = Number(page) || 1;
 
   const {
     isLoading,

@@ -9,10 +9,10 @@ const authSliceAPI = blogApi.injectEndpoints({
       }),
     }),
     login: builder.mutation({
-      query: (user: { email: string; password: string }) => ({
+      query: (data: { user: { email: string; password: string } }) => ({
         url: "/users/login",
         method: "POST",
-        body: user,
+        body: data,
       }),
     }),
     register: builder.mutation({
@@ -24,8 +24,27 @@ const authSliceAPI = blogApi.injectEndpoints({
         body: data,
       }),
     }),
+    updateUser: builder.mutation({
+      query: (data: {
+        user: {
+          email: string;
+          username: string;
+          image?: string;
+          bio?: string;
+          password?: string;
+        };
+      }) => ({
+        url: "/user",
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetCurrentUserQuery, useLoginMutation, useRegisterMutation } =
-  authSliceAPI;
+export const {
+  useGetCurrentUserQuery,
+  useLoginMutation,
+  useRegisterMutation,
+  useUpdateUserMutation,
+} = authSliceAPI;

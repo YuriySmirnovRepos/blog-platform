@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { withForm } from "@shared/components/HOC/withForm/withForm";
 import { CreateArticleFormData } from "../model/types/article";
-import "./CreateArticleForm.scss";
+import styles from"./CreateArticleForm.module.scss";
 
 interface CreateArticleFormProps {
   form: UseFormReturn<CreateArticleFormData>;

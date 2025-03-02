@@ -8,7 +8,8 @@
     font-size: vars.$font-size-md;
     line-height: vars.$font-line-height-lg;
     color: vars.$font-color-main;
-  } @else if $context == 'card_title' {
+  } 
+  @else if $context == 'card_title' {
     font-size: vars.$font-size-lg;
     line-height: vars.$font-line-height-lg;
     color: vars.$font-color-tertiary;
@@ -16,31 +17,40 @@
     overflow: hidden;
     text-overflow: ellipsis;
   } @else if $context == 'card_textContent' {
-    font-size: vars.$font-size-sm;
+    font-size: vars.$font-size-xs;
     line-height: vars.$font-line-height-md;
     color: vars.$font-color-main;
   } @else if $context == 'card_tag' {
-    font-size: vars.$font-size-sm;
+    font-size: vars.$font-size-xs;
     line-height: vars.$font-line-height-sm;
     color: vars.$font-color-secondary;
   } @else if $context == 'card_date' {
-    font-size: vars.$font-size-sm;
+    font-size: vars.$font-size-xs;
     line-height: vars.$font-line-height-md;
     color: vars.$font-color-secondary;
   } @else if $context == 'card_userName' {
     font-size: vars.$font-size-md;
     line-height: vars.$font-line-height-lg;
     color: vars.$font-color-main;
+
+  } @else if $context == 'form_title' {
+    font-size: vars.$font-size-lg;
+    line-height: vars.$font-line-height-lg;
+    color: vars.$font-color-form-title;
+    font-weight: 500;
+  } @else if $context == 'form_label' {
+    font-size: vars.$font-size-sm;
+    line-height: vars.$font-line-height-md;
+    color: vars.$font-color-form-title;
+    font-weight: 300;
+  } @else if $context == 'form_agreeTermsText' {
+    font-size: vars.$font-size-sm;
+    line-height: vars.$font-line-height-md;
+    color: vars.$form-agreeTerms-textColor;
+    font-weight: 300;
   } @else {
     font-size: vars.$font-size-md;
     line-height: vars.$font-line-height-md;
     color: vars.$font-color-main;
   }
-}
-
-@mixin pagesContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./Pagination.module.scss";
 
@@ -18,18 +18,22 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
   const navigate = useNavigate();
   const page = Number(useParams()?.page) || 1;
   const [startOfInterval, endOfInterval] = getInterval(page, totalPages);
-
   const [pageInterval, setPageInterval] = useState({
     start: startOfInterval,
     end: endOfInterval,
   });
+
+  useEffect(() => {
+    const [newStart, newEnd] = getInterval(page, totalPages);
+    setPageInterval({ start: newStart, end: newEnd });
+  }, [page]);
 
   const handlePageChange = (pageParam: number) => {
     if (pageParam === page) {
       return;
     }
     if (pageParam >= 1 && pageParam <= totalPages) {
-      navigate(`/articles/${pageParam}`);
+      navigate(`/articles/page/${pageParam}`);
     }
   };
 

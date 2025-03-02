@@ -4,14 +4,7 @@ import { ProfileEditForm } from "@features/Auth/ui/ProfileEditForm/ProfileEditFo
 export const ProfilePage = () => {
   return (
     <div style={{ paddingTop: 59 }}>
-      <ProfileEditForm
-        title="Edit Profile"
-        defaultValues={{
-          username: "John Doe",
-          email: "john@example.com",
-          avatarUrl: "",
-        }}
-      />
+      <ProfileEditForm title="Edit Profile" />
     </div>
   );
 };

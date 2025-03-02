@@ -4,7 +4,7 @@
 
 :root {
   height:100vh;
-  overflow: hidden;
+  overflow-y: auto;
   @include mixins.font();
   box-sizing: border-box;
   background-color: #EBEEF3;

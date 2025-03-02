@@ -12,6 +12,8 @@ import SignInPage from "@pages/SignIn/SignInPage";
 import SignUpPage from "@pages/SignUp/SignUpPage";
 import ProfilePage from "@pages/Profile/ProfilePage";
 import CreateArticlePage from "@pages/CreateArticle/CreateArticlePage";
+import EditableArticleCard from "@widgets/ArticleCard/components/EditableArticleCard/EditableArticleCard";
+import PrivateRoute from "@app/providers/PrivateRoute";
 
 const RouterProvider = () => {
   return (
@@ -19,13 +21,22 @@ const RouterProvider = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<ArticlesListPage />} />
-          <Route path="articles/" element={<Navigate to="/" replace />} />
-          <Route path="articles/:page" element={<ArticlesListPage />} />
-          <Route path="article/:id" element={<ArticlePage />} />
+          <Route path="articles">
+            <Route index element={<Navigate to="/" replace />} />
+            <Route path="page/:page" element={<ArticlesListPage />} />
+            <Route path=":id" element={<ArticlePage />}>
+              <Route path="edit" element={<EditableArticleCard />} />
+            </Route>
+          </Route>
           <Route path="sign-in" element={<SignInPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="new-article" element={<CreateArticlePage />} />
+
+          {/* Приватные маршруты */}
+          <Route element={<PrivateRoute />}>
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="new-article" element={<CreateArticlePage />} />
+          </Route>
+
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

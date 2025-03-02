@@ -12,7 +12,8 @@
 
     & .username {
         grid-area: username;
-        white-space: nowrap;
+        // white-space: nowrap;
+        // word-break: break-all;
         @include mixins.font('card_userName');
     }
 

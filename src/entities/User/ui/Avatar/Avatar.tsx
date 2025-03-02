@@ -10,8 +10,8 @@ export default function Avatar({ imgSrc }: { imgSrc: string }) {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIsAvatarLoading((isLoading) => {
-        if (isLoading) {
+      setIsAvatarLoading((isLoading_ActualState) => {
+        if (isLoading_ActualState) {
           setIsLoadingErrorOccurred(true);
           return false;
         }

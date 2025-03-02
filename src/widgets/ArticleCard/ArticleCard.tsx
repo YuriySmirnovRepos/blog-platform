@@ -1,45 +1,88 @@
 import styles from "./ArticleCard.module.scss";
-import { ArticleProps } from "@entities/Article/model/types";
-import { v4 as uuidv4 } from "uuid";
+import { ArticleData } from "@entities/Article/model/types";
 import User from "@entities/User/ui/User";
 import { Link } from "react-router-dom";
 import MarkdownParser from "@shared/components/MarkdownParser";
+import TagsContainer from "./components/TagsContainer/TagsContainer";
+import { useOverflowCheck } from "@shared/hooks";
+import { useState } from "react";
+import { useAuth } from "@features/Auth/hooks/useAuth";
 
-const ArticleCard: React.FC<ArticleProps> = ({ isDetailed, articleData }) => {
+export interface ArticleCardProps {
+  isDetailed: boolean;
+  articleData: ArticleData;
+}
+
+const ArticleCard: React.FC<ArticleCardProps> = ({
+  isDetailed,
+  articleData,
+}) => {
   const {
     title,
-    body,
     description,
+    body,
+    tagList,
     createdAt,
     updatedAt,
-    tagList,
-    favoritesCount,
     favorited,
+    favoritesCount,
+    slug,
     author,
   } = articleData;
 
-  const tagsJSX = tagList?.map((tag) => <span key={uuidv4()}>{tag}</span>);
+  const { isAuth } = useAuth();
+  const { containerRef, isOverflowing } = useOverflowCheck({
+    deps: [description],
+    listenResize: true,
+  });
+
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    if (isOverflowing) {
+      setShowFullDescription(!showFullDescription);
+    }
+  };
 
   return (
     <article className={isDetailed ? styles.detailed : styles.compact}>
       <div className={styles.titleContainer}>
         <Link
-          to={`/article/${articleData.slug}`}
+          to={`/articles/${slug}`}
           className={styles.title}
-          state={{ articleData }}
+          state={articleData}
+          title={title}
         >
           {title}
         </Link>
-
         <button
-          type="button"
-          className={`${styles.likes} ${favorited ? styles["likes--liked"] : ""}`}
+          className={styles.likes}
+          disabled={!isAuth}
+          title={
+            favorited ? "Добавлено в избранное" : "Не добавлено в избранное"
+          }
         >
           {favoritesCount}
         </button>
       </div>
-      <p className={styles.description}>{description}</p>
-      <div className={styles.tags}>{tagsJSX}</div>
+      <p
+        className={`${styles.description} 
+          ${isOverflowing && !showFullDescription ? styles.showMoreDescription : ""}`}
+        ref={containerRef}
+        onClick={toggleDescription}
+        style={
+          showFullDescription
+            ? {
+                WebkitLineClamp: "unset",
+                maxHeight: "none",
+                cursor: "pointer",
+              }
+            : {}
+        }
+      >
+        {description}
+      </p>
+      <TagsContainer tagList={tagList} />
       <User
         user={author}
         variant="author"
