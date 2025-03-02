@@ -2,48 +2,44 @@ import React from "react";
 import styles from "./EditableArticleCard.module.scss";
 import ArticleForm from "./components/ArticleForm";
 import { useArticleEdit } from "@features/CreateArticle/hooks/useArticleEdit";
+import { useCreateArticle } from "@features/CreateArticle/hooks/useCreateArticle";
 import { ConfirmationDialog } from "@shared/ui/ConfirmationDialog";
-import ArticleCard from "../../ArticleCard";
+import ArticleCard from "../ArticleCard/ArticleCard";
 
 const EditableArticleCard: React.FC<{ isNewArticle?: boolean }> = ({
   isNewArticle = false,
 }) => {
+  // Используем хук для редактирования существующих статей
   const {
     article,
     isEditing,
-    isAuthor,
     isDeleteConfirmOpen,
-    toggleEditMode,
     handleSave,
     handleCancel,
     handleDelete,
-    openDeleteConfirm,
     closeDeleteConfirm,
   } = useArticleEdit();
 
-  if (!article && !isNewArticle) {
-    // Если статья еще не загружена или отсутствует
-    return <div className={styles.loading}>Загрузка статьи...</div>;
-  }
+  // Используем хук для создания новых статей
+  const { handleCreateArticle, handleCancel: handleCancelCreate } =
+    useCreateArticle();
+
+  // Генерируем уникальный ключ для автосохранения на основе ID статьи или "new" для новой статьи
+  const autoSaveKey = `article_form_draft_${article?.slug || "new"}`;
+
+  // Выбираем соответствующие обработчики в зависимости от режима (создание или редактирование)
+  const onSubmit = isNewArticle ? handleCreateArticle : handleSave;
+  const onCancel = isNewArticle ? handleCancelCreate : handleCancel;
 
   return (
     <div className={styles.editableArticleContainer}>
-      {isAuthor && !isEditing && (
-        <div className={styles.actionButtons}>
-          <button onClick={toggleEditMode} className={styles.editButton}>
-            Редактировать
-          </button>
-          <button onClick={openDeleteConfirm} className={styles.deleteButton}>
-            Удалить
-          </button>
-        </div>
-      )}
-
       {isEditing || isNewArticle ? (
         <ArticleForm
           initialData={article}
-          onSubmit={handleSave}
-          onCancel={handleCancel}
+          onSubmit={onSubmit}
+          onCancel={onCancel}
+          autoSaveInterval={60000} // Автосохранение каждую минуту
+          autoSaveKey={autoSaveKey}
         />
       ) : (
         <ArticleCard isDetailed={true} articleData={article} />

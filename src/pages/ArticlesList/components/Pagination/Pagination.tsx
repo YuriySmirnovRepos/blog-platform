@@ -32,7 +32,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
     if (pageParam === page) {
       return;
     }
-    if (pageParam >= 1 && pageParam <= totalPages) {
+    if (pageParam > 0 && pageParam <= totalPages) {
       navigate(`/articles/page/${pageParam}`);
     }
   };

@@ -1,9 +1,9 @@
-import EditableArticleCard from "@widgets/ArticleCard/components/EditableArticleCard/EditableArticleCard";
+import { EditableArticleCard } from "@widgets/ArticleCard";
 
 const CreateArticlePage = () => {
   return (
     <div style={{ paddingTop: 24 }}>
-      <EditableArticleCard title="Create new article" isNewArticle />
+      <EditableArticleCard isNewArticle />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import blogApi from "@shared/lib/api";
 import { ArticlesResponse } from "../model/types";
-import { ArticleData } from "@entities/Article/model/types";
+import ArticleData from "@entities/Article/model/types";
 import UserAvatar from "@assets/userAvatar.svg";
 
 function transformArticlesData(articles: ArticleData[]): ArticleData[] {

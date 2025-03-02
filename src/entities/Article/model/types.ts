@@ -1,6 +1,6 @@
 import { Author } from "@entities/User/model/types";
 
-export interface ArticleData {
+export default interface ArticleData {
   slug: string;
   title: string;
   description: string;

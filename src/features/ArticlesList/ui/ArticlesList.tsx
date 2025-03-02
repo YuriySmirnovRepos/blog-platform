@@ -1,4 +1,4 @@
-import ArticleCard from "@widgets/ArticleCard/ArticleCard";
+import ArticleCard from "@widgets/ArticleCard/components/ArticleCard/ArticleCard";
 import { ArticlesListProps } from "../model/types";
 import styles from "./ArticlesList.module.scss";
 import { v4 as randomUUID } from "uuid";

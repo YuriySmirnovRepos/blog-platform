@@ -1,8 +1,13 @@
 // src/features/Article/hooks/useArticleEdit.ts
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { ArticleData } from "@entities/Article/model/types";
+import ArticleData from "@entities/Article/model/types";
 import { useAuth } from "@features/Auth/hooks/useAuth";
+import {
+  useUpdateArticleMutation,
+  useDeleteArticleMutation,
+  useGetArticleBySlugQuery,
+} from "../api/createArticleApi";
 
 interface UseArticleEditReturn {
   article: ArticleData | null;
@@ -23,23 +28,31 @@ export const useArticleEdit = (): UseArticleEditReturn => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
 
-  // Получаем данные статьи из state
-  const articleData = location.state as ArticleData;
+  // Используем RTK Query хуки
+  const { data: articleData } = useGetArticleBySlugQuery(id || "", {
+    skip: !id || !!location.state,
+  });
+  const [updateArticle] = useUpdateArticleMutation();
+  const [deleteArticle] = useDeleteArticleMutation();
 
-  const [article, setArticle] = useState<ArticleData | null>(null);
+  const [article, setArticle] = useState<ArticleData | null>(location.state);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   // Проверка, является ли текущий пользователь автором статьи
-  // Здесь нужно добавить проверку на основе вашей логики авторизации
   const [isAuthor, setIsAuthor] = useState(false);
 
   useEffect(() => {
-    if (articleData) {
+    // Если данные пришли из запроса, обновляем состояние
+    if (articleData && !article) {
       setArticle(articleData);
+    }
+  }, [articleData, article]);
 
+  useEffect(() => {
+    if (article) {
       // Проверка, является ли текущий пользователь автором
-      const isAuthor = articleData?.author?.username === currentUser?.username;
+      const isAuthor = article?.author?.username === currentUser?.username;
       setIsAuthor(isAuthor);
     }
 
@@ -47,7 +60,7 @@ export const useArticleEdit = (): UseArticleEditReturn => {
     if (location.pathname.includes("/edit")) {
       setIsEditing(true);
     }
-  }, [articleData, location.pathname, currentUser?.username]);
+  }, [location.pathname, article, currentUser?.username]);
 
   const toggleEditMode = () => {
     if (isEditing) {
@@ -62,14 +75,31 @@ export const useArticleEdit = (): UseArticleEditReturn => {
 
   const handleSave = async (updatedArticle: ArticleData) => {
     try {
-      // Здесь должен быть вызов API для сохранения обновленной статьи
-      // Например: await articleApi.updateArticle(id, updatedArticle);
+      if (!id) {
+        throw new Error("ID статьи не определен");
+      }
+
+      // Подготавливаем данные для запроса
+      const articleRequest = {
+        article: {
+          title: updatedArticle.title,
+          description: updatedArticle.description,
+          body: updatedArticle.body,
+          tagList: updatedArticle.tagList,
+        },
+      };
+
+      // Вызываем API для обновления статьи
+      const result = await updateArticle({
+        slug: id,
+        data: articleRequest,
+      }).unwrap();
 
       // После успешного сохранения обновляем локальное состояние
-      setArticle(updatedArticle);
+      setArticle(result);
 
       // Выходим из режима редактирования и переходим на страницу просмотра
-      navigate(`/articles/${id}`, { state: updatedArticle });
+      navigate(`/articles/${id}`, { state: result });
       setIsEditing(false);
     } catch (error) {
       console.error("Ошибка при сохранении статьи:", error);
@@ -93,11 +123,15 @@ export const useArticleEdit = (): UseArticleEditReturn => {
 
   const handleDelete = async () => {
     try {
-      // Здесь должен быть вызов API для удаления статьи
-      // Например: await articleApi.deleteArticle(id);
+      if (!id) {
+        throw new Error("ID статьи не определен");
+      }
+
+      // Вызываем API для удаления статьи
+      await deleteArticle(id).unwrap();
 
       // После успешного удаления перенаправляем на главную страницу
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.error("Ошибка при удалении статьи:", error);
       // Здесь можно добавить обработку ошибок, например, показ уведомления
