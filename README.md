@@ -2,4 +2,4 @@
 
 ## Link to vercel
 
-[Blog Platform](https://blog-platform.kata.academy/)
+[Blog Platform](https://blog-platform-lilac-two.vercel.app/)
