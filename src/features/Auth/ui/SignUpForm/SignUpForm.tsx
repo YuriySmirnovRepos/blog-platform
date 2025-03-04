@@ -45,18 +45,28 @@ const SignUpFormContent = React.forwardRef<
         window.location.href = "/";
         console.log(`success. token: ${response.user.token}`);
       } catch (err) {
-        // console.error(err);
-        if (err.data?.errors) {
-          Object.keys(err.data.errors).forEach((key) => {
+        // Определяем тип ошибки от API
+        interface ApiError {
+          data?: {
+            errors?: Record<string, string>;
+            message?: string;
+          };
+        }
+
+        // Проверяем, соответствует ли err ожидаемой структуре
+        const apiError = err as ApiError;
+
+        if (apiError.data?.errors) {
+          Object.keys(apiError.data.errors).forEach((key) => {
             setError(key as keyof SignUpFormData, {
               type: "server",
-              message: err.data.errors[key],
+              message: apiError.data!.errors![key],
             });
           });
         } else {
           setError("root", {
             type: "server",
-            message: err.data.message,
+            message: apiError.data!.message,
           });
         }
       }

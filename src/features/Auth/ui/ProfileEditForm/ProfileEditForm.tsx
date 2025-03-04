@@ -17,7 +17,7 @@ interface ProfileFormData extends BaseFormData {
 
 const ProfileEditFormContent = React.forwardRef<
   { onFormSubmit: (data: ProfileFormData) => Promise<void> },
-  { form: any }
+  { form?: any }
 >(({ form: { register, formState, setError } }, ref) => {
   const [updateUserMutationTrigger, { isLoading }] = useUpdateUserMutation();
   const { currentUser, updateUser, logout } = useAuth();
@@ -27,17 +27,18 @@ const ProfileEditFormContent = React.forwardRef<
   useImperativeHandle(ref, () => ({
     onFormSubmit: async (data: ProfileFormData) => {
       try {
-        // Создаем базовый объект user без password
-        const userUpdate: Record<
-          string,
-          string | number | boolean | undefined
-        > = {
+        const userUpdate: {
+          email: string;
+          username: string;
+          image?: string;
+          bio?: string;
+          password?: string;
+        } = {
           username: data.username,
           email: data.email,
           image: data.avatarUrl,
         };
 
-        // Условно добавляем password только если оно существует и не пустое
         if (data.password && data.password.trim() !== "") {
           userUpdate.password = data.password;
         }
@@ -52,18 +53,29 @@ const ProfileEditFormContent = React.forwardRef<
         } else {
           updateUser(response.user);
         }
-      } catch (err) {
-        if (err.data?.errors) {
-          Object.keys(err.data.errors).forEach((key) => {
+      } catch (err: unknown) {
+        // Определяем тип ошибки от API
+        interface ApiError {
+          data?: {
+            errors?: Record<string, string>;
+            message?: string;
+          };
+        }
+
+        // Проверяем, соответствует ли err ожидаемой структуре
+        const apiError = err as ApiError;
+
+        if (apiError.data?.errors) {
+          Object.keys(apiError.data.errors).forEach((key) => {
             setError(key as keyof ProfileFormData, {
               type: "server",
-              message: err.data.errors[key],
+              message: apiError.data!.errors![key],
             });
           });
         } else {
           setError("root", {
             type: "server",
-            message: err.data.message,
+            message: apiError.data?.message || "Произошла неизвестная ошибка",
           });
         }
       }

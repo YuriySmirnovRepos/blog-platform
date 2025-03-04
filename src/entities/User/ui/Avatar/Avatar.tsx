@@ -11,10 +11,9 @@ export default function Avatar({ imgSrc }: { imgSrc: string }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsAvatarLoading((isLoading_ActualState) => {
-        if (isLoading_ActualState) {
-          setIsLoadingErrorOccurred(true);
-          return false;
-        }
+        if (!isLoading_ActualState) return false;
+        setIsLoadingErrorOccurred(true);
+        return false;
       });
     }, avatarLoadingTimeout);
 
@@ -31,11 +30,12 @@ export default function Avatar({ imgSrc }: { imgSrc: string }) {
   return (
     <div className={styles.avatarContainer}>
       {isAvatarLoading && <Loader isSmall />}
-      {!isAvatarLoading && isLoadingErrorOccurred && (
-        <img src={UserAvatar} className={styles.avatar} alt="User avatar" />
-      )}
-      {!isAvatarLoading && !isLoadingErrorOccurred && (
-        <img src={imgSrc} className={styles.avatar} alt="User avatar" />
+      {!isAvatarLoading && (
+        <img
+          src={isLoadingErrorOccurred ? UserAvatar : imgSrc}
+          className={styles.avatar}
+          alt="User avatar"
+        />
       )}
     </div>
   );

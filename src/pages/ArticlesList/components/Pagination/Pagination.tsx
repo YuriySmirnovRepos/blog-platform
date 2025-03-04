@@ -55,7 +55,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages }) => {
   };
 
   const renderPageNumbers = () => {
-    const pages = [];
+    const pages: React.ReactNode[] = [];
     if (totalPages === 0) {
       return null;
     }

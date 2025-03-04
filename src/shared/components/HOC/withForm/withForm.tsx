@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import "./Form.scss";
 
 export interface BaseFormData {
@@ -8,14 +8,9 @@ export interface BaseFormData {
   username?: string;
 }
 
-interface FormProps {
+export interface FormProps {
   title: string;
   defaultValues?: Record<string, any>;
-}
-
-interface WithFormProps extends FormProps {
-  form?: any;
-  onFormSubmit?: (data: any) => Promise<void> | void;
 }
 
 // Интерфейс для компонентов с методом onFormSubmit
@@ -23,12 +18,19 @@ interface FormComponentRef<T = any> {
   onFormSubmit?: (data: T) => Promise<void> | void;
 }
 
-export const withForm = <P extends WithFormProps>(
-  WrappedComponent: React.ComponentType<P>,
+export const withForm = <
+  P extends { title: string; form?: UseFormReturn<any> },
+>(
+  WrappedComponent:
+    | React.ForwardRefExoticComponent<
+        P & React.RefAttributes<FormComponentRef<any>>
+      >
+    | React.ComponentType<P>,
   widthInVw = 29,
 ) => {
-  const WithFormComponent = (props: P) => {
-    const { title, defaultValues, ...rest } = props;
+  const WithFormComponent = (props: Omit<P, "form">) => {
+    const { title, defaultValues, ...rest } = props as FormProps &
+      Omit<P, "form">;
 
     // Приведение типа defaultValues к требуемому типу для useForm
     const form = useForm({
@@ -42,7 +44,7 @@ export const withForm = <P extends WithFormProps>(
       }
     });
 
-    const wrappedRef = useRef<FormComponentRef<P>>(null);
+    const wrappedRef = useRef<FormComponentRef<any>>(null);
 
     return (
       <form
@@ -51,7 +53,12 @@ export const withForm = <P extends WithFormProps>(
         onSubmit={handleSubmit}
       >
         <h2>{title}</h2>
-        <WrappedComponent ref={wrappedRef} {...(rest as P)} form={form} />
+        <WrappedComponent
+          ref={wrappedRef}
+          {...(rest as any)}
+          form={form}
+          title={title}
+        />
       </form>
     );
   };

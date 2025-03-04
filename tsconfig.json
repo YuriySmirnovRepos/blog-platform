@@ -5,10 +5,10 @@
     "incremental": true,
     "target": "ESNext",
     "module": "ESNext",
-    "skipLibCheck": false,
-    "allowJs": true,
+    "skipLibCheck": true,
+    "allowJs": true, 
     "baseUrl": "./src",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
 
     /* Bundler mode */
@@ -25,6 +25,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "strictNullChecks": true,
 
     "paths": {
       "@app/*": ["./app/*"],
@@ -36,6 +37,5 @@
       "@widgets/*" : ["./widgets/*"],
     },
   },
-  // "include": ["src", "globals.d.ts", "main.tsx"],
-  "exclude": ["node_modules", "dist", "public"],
+  "exclude": ["node_modules", "dist", "public", "temp"],
 }

@@ -7,7 +7,7 @@ export default function User({ user, variant, createdAt, style }: UserProps) {
   return (
     <div className={styles.userBadge} style={style}>
       <span className={styles.username}>{user?.username || ""}</span>
-      <Avatar imgSrc={user?.image || user?.avatarUrl || UserAvatar} />
+      <Avatar imgSrc={user?.image || UserAvatar} />
       {variant === "author" && (
         <time className={styles.articleCreationDate}>
           {createdAt?.split("T")[0] || "No date"}

@@ -6,6 +6,7 @@ import {
 } from "@entities/User";
 import { useAppDispatch } from "@shared/hooks/redux";
 import { setCurrentUser, logoutUser } from "@entities/User";
+import { CurrentUser } from "@entities/User";
 
 /**
  * Хук для получения информации об авторизации пользователя

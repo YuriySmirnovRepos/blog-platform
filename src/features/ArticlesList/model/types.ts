@@ -1,4 +1,4 @@
-import { ArticleData } from "@entities/Article/model/types";
+import ArticleData from "@entities/Article/model/types";
 
 export interface ArticlesResponse {
   articles: ArticleData[];

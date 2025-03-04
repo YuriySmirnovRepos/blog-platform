@@ -19,16 +19,6 @@ interface SignInFormProps {
   title: string;
 }
 
-interface LoginResponseSuccess {
-  user: {
-    token: string;
-    email: string;
-    username: string;
-    image?: string;
-    bio?: string;
-  };
-}
-
 const SignInFormContent = React.forwardRef<
   { onFormSubmit: (data: SignInFormData) => Promise<void> },
   SignInFormProps
@@ -78,7 +68,18 @@ const SignInFormContent = React.forwardRef<
         // Перенаправляем пользователя на домашнюю страницу
         navigate("/");
       } catch (err: unknown) {
-        const errors = err.data?.errors;
+        // Определяем тип ошибки от API
+        interface ApiError {
+          data?: {
+            errors?: Record<string, string>;
+            message?: string;
+          };
+        }
+
+        // Проверяем, соответствует ли err ожидаемой структуре
+        const apiError = err as ApiError;
+
+        const errors = apiError.data?.errors;
         if (errors) {
           let msg = "";
           Object.entries(errors).forEach(([key, value]) => {
@@ -154,6 +155,4 @@ const SignInFormContent = React.forwardRef<
 
 SignInFormContent.displayName = "SignInFormContent";
 
-export const SignInForm = withForm<SignInFormProps & { title: string }>(
-  SignInFormContent,
-);
+export const SignInForm = withForm<SignInFormProps>(SignInFormContent);
